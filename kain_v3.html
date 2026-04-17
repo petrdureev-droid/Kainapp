@@ -1,0 +1,43 @@
+at <<EOF > kain_v3.html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAIN V3</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: monospace; padding: 20px; }
+        #log { height: 70vh; overflow-y: auto; border: 1px solid #0f0; padding: 10px; background: #050505; }
+        .ui { display: flex; margin-top: 10px; }
+        input { background: #000; border: 1px solid #0f0; color: #0f0; flex-grow: 1; padding: 10px; outline: none; }
+        button { background: #0f0; color: #000; border: none; padding: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div style="font-size: 10px; color: #008800;">KAIN CORE V3.0 | STATUS: READY</div>
+    <div id="log">>>> СИСТЕМА ГОТОВА...</div>
+    <div class="ui">
+        <input type="text" id="i" placeholder="Команда..." autocomplete="off">
+        <button onclick="s()">EXE</button>
+    </div>
+    <script>
+        const TOKEN = "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";
+        async function s() {
+            const i = document.getElementById('i');
+            const l = document.getElementById('log');
+            if(!i.value) return;
+            l.innerHTML += '<div>> ' + i.value + '</div>';
+            const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json'},
+                body: JSON.stringify({model: 'llama-3.1-8b-instant', messages: [{role: 'system', content: 'Ты КАИН. Суровый ИИ.'}, {role: 'user', content: i.value}]})
+            });
+            const d = await res.json();
+            l.innerHTML += '<div style="color:#00ff41">[KAIN]: ' + d.choices[0].message.content + '</div>';
+            i.value = ''; l.scrollTop = l.scrollHeight;
+        }
+    </script>
+</body>
+</html>
+EOF
+
